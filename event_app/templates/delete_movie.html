@@ -1,0 +1,8 @@
+<h1>Delete Movie</h1>
+<p>Are you sure you want to delete the movie <strong>{{ movie.title }}</strong>?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Confirm Delete</button>
+    <a href="{% url 'admin_dashboard' %}">Cancel</a>
+</form>

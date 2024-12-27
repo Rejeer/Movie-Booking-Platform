@@ -1,0 +1,132 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<link rel="stylesheet" href="{% static 'styles.css' %}">
+<style>
+  .hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4rem 2rem;
+    background-color: white;
+    background-image: url("{% static 'images/bg-im.jpg' %}"); /* Add background image */
+    background-size: cover; /* Ensures the background image covers the entire section */
+    background-position: center; /* Centers the background image */
+    background-repeat: no-repeat; /* Prevents repeating the image */
+  }
+
+  .hero-content {
+    max-width: 50%;
+  }
+
+  .hero-content h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 4rem;
+  }
+
+  .hero-content p {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 1rem;
+  }
+
+  .features-list {
+    list-style-type: none;
+    color: #666;
+    margin-bottom: 1rem;
+  }
+
+  .features-list li {
+    margin-bottom: 0.5rem;
+  }
+
+  .read-more-btn {
+    background-color: #ff6347;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .read-more-btn:hover {
+    background-color: #e55347;
+  }
+
+  .hero-image img {
+    width: 100%;
+    max-width: 600px;
+    /* Adjust width as needed */
+  }
+
+  /* Features section */
+  .features {
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .features h2 {
+    font-size: 1.5rem;
+    color: #333;
+  }
+</style>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1>Crafting Memorable Experiences with Precision and Passion</h1>
+    <p>
+      At Avvenimento, we transform your ideas into extraordinary events. From corporate gatherings to private celebrations, our dedicated team ensures every detail is handled with care, creativity, and professionalism. Let us bring your vision to life and make your moments unforgettable
+    </p>
+    <ul class="features-list">
+      <li>Ullamcorper aliquam at id ac eros mus convallis.</li>
+      <li>Ullamcorper integer sapien bibendum orci varius.</li>
+      <li>Orci auctor odio orci bibendum sit eget sapien.</li>
+    </ul>
+    <button class="read-more-btn">Read More</button>
+  </div>
+  {% comment %}
+  <div class="hero-image">
+    <img src="#" alt="Illustration" />
+  </div>
+  {% endcomment %}
+</section>
+
+<!-- Features Section -->
+<section class="features">
+  <h2>Features</h2>
+  <!-- Additional content for features -->
+</section>
+<div class="best-movie-card">
+  <h2>Best Movie</h2>
+  {% if best_movie %}
+  <div class="card">
+      <img src="{{ best_movie.image.url }}" alt="{{ best_movie.title }}">
+      <div class="card-body">
+          <h3>{{ best_movie.title }}</h3>
+          <p>{{ best_movie.description }}</p>
+          <p><strong>Rating:</strong> {{ best_movie.rating }}</p>
+          <a href="#" class="btn">View Details</a>
+      </div>
+  </div>
+  {% else %}
+  <p>No best movie available.</p>
+  {% endif %}
+</div>
+<hr>
+<!-- Movies List -->
+<div class="movies-list">
+  <h2>All Movies</h2>
+  {% for movie in movies %}
+  <div class="movie-card">
+      <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+      <div class="movie-info">
+          <h3>{{ movie.title }}</h3>
+          <p>{{ movie.description }}</p>
+          <p><strong>Rating:</strong> {{ movie.rating }}</p>
+          <a href="{% url 'movie_detail' movie.id %}" class="btn">View Details</a>
+      </div>
+  </div>
+  {% endfor %}
+</div>
+</div>
+<hr>
+{% endblock %}

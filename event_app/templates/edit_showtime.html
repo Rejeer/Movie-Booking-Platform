@@ -1,0 +1,16 @@
+<form method="POST">
+    {% csrf_token %}
+    <label for="movie">Movie:</label>
+    <select id="movie" name="movie" required>
+        {% for movie in movies %}
+        <option value="{{ movie.id }}" {% if movie == showtime.movie %}selected{% endif %}>
+            {{ movie.title }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <label for="showtime">Showtime:</label>
+    <input type="datetime-local" id="showtime" name="showtime" value="{{ showtime.showtime|date:'Y-m-d\\TH:i' }}" required>
+
+    <button type="submit">Update Showtime</button>
+</form>
