@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .payment-container {
+            width: 350px;
+            background: #fff;
+            
+            border-radius: 12px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px 25px;
+        }
+
+        .payment-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .payment-header img {
+            width: 150px;
+        }
+
+        .payment-header h2 {
+            font-size: 18px;
+            margin: 0;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .payment-total {
+            margin: 20px 0;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 600;
+            color:#5F259F;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+
+        .pay-button {
+          display: inline-block;
+          padding: 10px 20px;
+          background-color:#5F259F;
+          color: #fff;
+          text-decoration: none;
+          border-radius: 5px;
+          font-size: 16px;
+          font-weight: bold;
+          text-align: center;
+      }
+      .pay-button:hover {
+          background-color:rgb(27, 0, 179);
+      }
+      
+
+        .secure-note {
+            text-align: center;
+            font-size: 12px;
+            color: #888;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <!-- Header Section -->
+        <div class="payment-header">
+            <img src="https://cdn.iconscout.com/icon/free/png-128/free-phonepe-logo-icon-download-in-svg-png-gif-file-formats--payment-app-application-indian-companies-pack-logos-icons-2249157.png?f=webp" alt="Logo">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQkHNRQj89cAP1RrrlUSfezirOARmxtsIbwg&s" alt="Logo">
+        </div>
+
+        <!-- Total Price Section -->
+        <div class="payment-total">
+            ₹<span id="display_total_price">0.00</span>
+        </div>
+
+        <!-- Payment Form -->
+        <form method="POST" action="/process_payment/"> <!-- Update with your Django route -->
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Name on Card</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="card_number">Card Number</label>
+                <input type="text" id="card_number" name="card_number" maxlength="16" placeholder="1234 5678 9012 3456" required>
+            </div>
+
+            <div class="form-group">
+                <label for="expiry_date">Expiry Date</label>
+                <input type="text" id="expiry_date" name="expiry_date" maxlength="5" placeholder="MM/YY" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cvv">CVV</label>
+                <input type="password" id="cvv" name="cvv" maxlength="3" placeholder="123" required>
+            </div>
+
+            <!-- Hidden Total Price -->
+            <input type="hidden" name="total_price" id="hidden_total_price" value="0.00">
+
+            <a href="/payment-success/" id="pay_button" class="pay-button">Pay ₹<span id="pay_amount">0.00</span></a>
+
+        </form>
+
+        <!-- Secure Note -->
+        <p class="secure-note">Transactions are 100% secure and encrypted.</p>
+    </div>
+
+    <script>
+        // Fetch total price from localStorage or backend
+        document.addEventListener('DOMContentLoaded', function() {
+            const totalPrice = localStorage.getItem('totalPrice') || "0.00";
+            document.getElementById('display_total_price').textContent = totalPrice;
+            document.getElementById('pay_amount').textContent = totalPrice;
+            document.getElementById('hidden_total_price').value = totalPrice;
+
+        });
+        function updatePrice() {
+          const theaterSelect = document.getElementById('theater');
+          const quantityInput = document.getElementById('quantity');
+          const totalPriceElement = document.getElementById('total_price');
+          const payButton = document.getElementById('pay_button');
+          const payAmount = document.getElementById('pay_amount');
+      
+          const selectedTheater = theaterSelect.options[theaterSelect.selectedIndex];
+          const ticketPrice = parseFloat(selectedTheater.dataset.price || 0);
+          const quantity = parseInt(quantityInput.value || 1);
+      
+          const totalPrice = ticketPrice * quantity;
+      
+          // Update the visible total price
+          totalPriceElement.textContent = totalPrice.toFixed(2);
+      
+          // Update the amount in the Pay button
+          payAmount.textContent = totalPrice.toFixed(2);
+          localStorage.setItem('totalPrice', totalPrice.toFixed(2));
+      }
+    </script>
+</body>
+</html>

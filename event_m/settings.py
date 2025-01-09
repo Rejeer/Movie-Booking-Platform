@@ -122,6 +122,10 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
+# PayU Settings
+PAYU_MERCHANT_KEY = "1162471304f82aa7eb207669c5be5d513cbf5593ecc3875af8c54411c895be26"
+PAYU_MERCHANT_SALT = "f92a34b4cc8e752dc4decfc029091ef11d32194a11074da4a5262ff2eedb2836"
+PAYU_BASE_URL = "https://sandboxsecure.payu.in"  # For testing; use "https://secure.payu.in" for production
 
 
 MEDIA_ROOT = 'media'

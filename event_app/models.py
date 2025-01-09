@@ -94,6 +94,7 @@ class Movie(models.Model):
 class Theater(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='theater_profile', null=True, blank=True)
     name = models.CharField(max_length=100, unique=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     location = models.TextField()
     capacity = models.IntegerField()
     contact_number = models.CharField(max_length=15, null=True, blank=True)
@@ -103,8 +104,22 @@ class Theater(models.Model):
 
 class Showtime(models.Model):
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    theater = models.ForeignKey(Theater, on_delete=models.CASCADE)
+    theater = models.ForeignKey(Theater, on_delete=models.CASCADE,  related_name='showtimes')
     showtime = models.DateTimeField()
 
     def __str__(self):
         return f"{self.movie.title} - {self.theater.name} at {self.showtime}"
+    
+
+class Booking(models.Model):
+    customer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='bookings')
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    theater = models.ForeignKey(Theater, on_delete=models.CASCADE)
+    showtime = models.ForeignKey(Showtime, on_delete=models.CASCADE)
+    booking_date = models.DateTimeField(auto_now_add=True)
+    number_of_tickets = models.PositiveIntegerField()
+    quantity = models.PositiveIntegerField(default=1)
+
+
+    def __str__(self):
+        return f"{self.customer.username} - {self.movie.title} - {self.showtime.showtime}"

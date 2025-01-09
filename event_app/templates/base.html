@@ -167,7 +167,8 @@
         <li><a href="{% url 'customer_dashboard' %}">Home</a></li>
         <li><a href="#">About</a></li>
         <li><a href="#">Hotels</a></li>
-        <li><a href="#">Booking</a></li>
+        {% comment %} <li><a href="{% url 'user_bookings' booking_id=booking.id %}">Booking</a></li> {% endcomment %}
+
         <li><a href="#">Contact Us</a></li>
         <li><a href="#">FAQs</a></li>
       </ul>

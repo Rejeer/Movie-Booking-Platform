@@ -12,6 +12,7 @@ urlpatterns = [
     path('admin_dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('theater_dashboard/', views.theater_dashboard, name='theater_dashboard'),
 
+
     #MOVIE CREATION,EDIT AND DELETE
     path('movie_create/', views.movie_create, name='movie_create'),
     path('movie/edit/<int:movie_id>/', views.edit_movie, name='edit_movie'),
@@ -27,4 +28,16 @@ urlpatterns = [
 
     #MOVIE DETAIL AND BOOKING
     path('movie/<int:movie_id>/', views.movie_detail, name='movie_detail'),
+    path('booking/<int:movie_id>/',views.book_movie, name='book_movie'),
+    path('booking_detail/<int:booking_id>/', views.user_bookings, name='user_bookings'),
+    #PAYMENT GATEWAY
+    # path('payment/success/', views.payment_success, name='payment_success'),
+    path('payment-success/', views.payment_success, name='payment_success'),
+    # path('payment/failure/', views.payment_failure, name='payment_failure'),
+    path('payment/<int:booking_id>/', views.payment_page, name='payment_page'),
+    # path('process_payment/', views.process_payment, name='process_payment'),
+
+    #ADMIN THEATER_LISTING
+    path('theater_listing/',views.theater_list,name='theater_list'),
+    path('theater/<int:id>/', views.theater_detail, name='theater_detail')
 ]

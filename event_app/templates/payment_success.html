@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Success</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f9;
+            color: #333;
+            padding: 50px;
+        }
+        .success-message {
+            font-size: 24px;
+            color: #28a745;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <h1>Thank You!</h1>
+    <p class="success-message">Your payment was successful!</p>
+    <a href="/" class="button">Go to Homepage</a>
+</body>
+<script>
+    function updatePrice() {
+        const theaterSelect = document.getElementById('theater');
+        const quantityInput = document.getElementById('quantity');
+        const totalPriceElement = document.getElementById('total_price');
+        const payButton = document.getElementById('pay_button');
+        const payAmount = document.getElementById('pay_amount');
+    
+        const selectedTheater = theaterSelect.options[theaterSelect.selectedIndex];
+        const ticketPrice = parseFloat(selectedTheater.dataset.price || 0);
+        const quantity = parseInt(quantityInput.value || 1);
+    
+        const totalPrice = ticketPrice * quantity;
+    
+        // Update the visible total price
+        totalPriceElement.textContent = totalPrice.toFixed(2);
+    
+        // Update the amount in the Pay button
+        payAmount.textContent = totalPrice.toFixed(2);
+        localStorage.setItem('totalPrice', totalPrice.toFixed(2));
+    }
+</script>    
+</html>

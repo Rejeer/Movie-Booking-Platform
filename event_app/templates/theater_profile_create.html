@@ -1,4 +1,40 @@
-<form method="POST">
+<style>
+    .form-group {
+        margin-bottom: 15px;
+      }
+      
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+      
+      input[type="text"],
+      textarea,
+      input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+      }
+      
+      textarea {
+        height: 100px; /* Adjust height as needed */
+      }
+      
+      button.btn-primary {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+      
+      button.btn-primary:hover {
+        background-color: #0062cc;
+      }
+    </style>
+{% comment %} <form method="POST">
     {% csrf_token %}
     <label for="name">Theater Name:</label>
     <input type="text" id="name" name="name" required>
@@ -13,4 +49,25 @@
     <input type="text" id="contact_number" name="contact_number">
 
     <button type="submit">Create Profile</button>
+</form> {% endcomment %}
+<form method="POST">
+    {% csrf_token %}
+    <label for="name">Theater Name:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="location">Location:</label>
+    <textarea id="location" name="location" required></textarea>
+
+    <label for="capacity">Seating Capacity:</label>
+    <input type="number" id="capacity" name="capacity" required>
+
+    <label for="contact_number">Contact Number:</label>
+    <input type="text" id="contact_number" name="contact_number" required>
+
+    <label for="ticket_price">Ticket Price:</label>
+    <input type="text" id="price" name="price" required>
+
+    <button type="submit">Create Profile</button>
 </form>
+
+

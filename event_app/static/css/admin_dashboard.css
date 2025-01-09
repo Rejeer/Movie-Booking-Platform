@@ -33,7 +33,7 @@ a {
     display: inline-block;
     padding: 0.5rem 1.5rem;
     color: #ffffff;
-    background-color: #4caf50;
+    background-color: #f2a900;
     border-radius: 5px;
     text-decoration: none;
     font-size: 1rem;
@@ -42,7 +42,7 @@ a {
 }
 
 a:hover {
-    background-color: #45a049;
+    background-color:  #d3ad55;
 }
 
 .container2 {
@@ -86,10 +86,10 @@ table tr:hover {
 
 .table-actions a {
     margin: 0 5px;
-    color: #4caf50;
+    color: #f2a900;
     text-decoration: none;
 }
 
 .table-actions a:hover {
-    color: #388e3c;
+    color: #dfc383;
 }

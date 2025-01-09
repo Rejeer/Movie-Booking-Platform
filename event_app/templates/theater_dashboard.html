@@ -1,147 +1,258 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Theater Owner Dashboard</title>
-    <link rel="stylesheet" href="{% static 'css/hotel_owner_dashboard.css' %}" />
+    <link
+      rel="stylesheet"
+      href="{% static 'css/hotel_owner_dashboard.css' %}"
+    />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f9;
-            margin: 0;
-            padding: 0;
-        }
-        h1, h2 {
-            text-align: center;
-            color: #333;
-        }
-        table {
-            width: 100%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px;
-            text-align: left;
-        }
-        th {
-            background-color: #007bff;
-            color: white;
-            font-weight: bold;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-        a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
-        .no-data {
-            text-align: center;
-            margin-top: 20px;
-        }
-        .no-data a {
-            color: #007bff;
-            font-weight: bold;
-        }
-        .container {
-            text-align: center;
-            margin: 20px;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        .btn:hover {
-            background-color: #0056b3;
-        }
-        .side-panel {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            margin: 20px;
-            padding: 20px;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-        .dashboard-main {
-            display: flex;
-            justify-content: space-between;
-            margin: 20px;
-        }
-        .side-panel p {
-            margin: 10px 0;
-            color: #555;
-        }
-    </style>
-</head>
-<body>
-    <div class="dashboard-main">
-        <div class="side-panel">
-            <h1>Welcome, Theater Owner</h1>
-            <p>Manage bookings, view customer feedback, and monitor hotel statistics.</p>
-            <div class="actions">
-                <a href="{% url 'logout' %}" class="btn">Logout</a>
-            </div>
-            <div class="actions">
-                {% if theater_exists %}
-                    <a href="{% url 'theater_profile_update' %}" class="btn">Update Theater</a>
-                {% else %}
-                    <a href="{% url 'theater_profile_create' %}" class="btn">Create Theater</a>
-                {% endif %}
-            </div>
-        </div>
-        <div>
-            {% if theater_exists %}
-                <h1>{{ theater.name }} Dashboard</h1>
-                <div class="side-panel">
-                    <p>Location: {{ theater.location }}</p>
-                    <p>Capacity: {{ theater.capacity }}</p>
-                </div>
+      body {
+        font-family: 'Arial', sans-serif;
+        background-color: #213346;
+        color: #333;
+        margin: 0;
+        padding: 0;
+      }
+      
+      /* Dashboard Container */
+      .dashboard-main {
+        display: flex;
+        margin: 0;
+        padding: 20px;
+        background-color: #213346;
+      }
+      
+      /* Sidebar */
+      .side-panel {
+        background-color: #2c3e50;
+        color:rgb(202, 217, 221); /* Updated text color for better visibility */
+        width: 250px;
+        padding: 20px;
+        border-radius: 8px;
+        margin-right: 20px;
+      }
+      
+      .side-panel h1 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        color:#213346 /* Ensuring title is visible */
+      }
+      
+      .side-panel p {
+        font-size: 1em;
+        margin-bottom: 15px;
+        color:#213346 /* Ensuring paragraph is visible */
+      }
+      
+      /* Actions button text color */
+      .actions .btn {
+        background-color: #e67e22;
+        color: #fff;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        display: inline-block;
+        margin-top: 10px;
+        transition: background-color 0.3s ease;
+      }
+      
+      .actions .btn:hover {
+        background-color: #d35400;
+      }
+      
+      /* Dashboard Content */
+      div {
+        flex-grow: 1;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        color: #213346; /* Updated text color for content */
+      }
+      
+      /* Table Styling */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background-color: #ecf0f1;
+        border-radius: 8px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+      }
+      
+      table th, table td {
+        padding: 12px;
+        text-align: left;
+        font-size: 1.1em;
+        color:#213346; /* Ensuring text is dark enough */
+      }
+      
+      table th {
+        background-color: #213346;
+        color: white;
+      }
+      
+      table tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      
+      table a {
+        color: #3498db;
+        text-decoration: none;
+      }
+      
+      table a:hover {
+        text-decoration: underline;
+      }
+      
+      /* No data message */
+      .no-data {
+        color: #213346;
+        font-size: 1.1em;
+        text-align: center;
+        margin-top: 20px;
+      }
+      
+      /* Heading styles */
+      h1, h2 {
+        color: #213346; /* Ensuring headings are visible */
+      }
+      
+      /* Card-Like Layout for Showtimes & Bookings */
+      .side-panel, .actions {
+        background-color: #fff;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      
+      .side-panel h2, .actions h2 {
+        color: #213346;
+        font-size: 1.5em;
+      }
+      
+      /* Add Showtime Button */
+      a.add-showtime {
+        display: inline-block;
+        margin-top: 20px;
+        background-color: #213346;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 1.2em;
+      }
+      
+      a.add-showtime:hover {
+        background-color: #213346;
+      }
+      
 
-                <h2>Showtimes</h2>
-                {% if showtimes %}
-                    <table>
-                        <tr>
-                            <th>Movie</th>
-                            <th>Showtime</th>
-                            <th>Actions</th>
-                        </tr>
-                        {% for showtime in showtimes %}
-                        <tr>
-                            <td>{{ showtime.movie.title }}</td>
-                            <td>{{ showtime.showtime }}</td>
-                            <td>
-                                <a href="{% url 'edit_showtime' showtime.id %}">Edit</a> |
-                                <a href="{% url 'delete_showtime' showtime.id %}" onclick="return confirm('Are you sure?');">Delete</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </table>
-                {% else %}
-                    <p class="no-data">No showtimes available. <a href="{% url 'add_showtime' %}">Add a showtime</a>.</p>
-                {% endif %}
-            {% else %}
-                <p>No theater profile found. <a href="{% url 'theater_profile_create' %}">Create your theater profile</a>.</p>
-            {% endif %}
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-main">
+      <div class="side-panel">
+        <h1>Welcome, Theater Owner</h1>
+        <p>
+          Manage bookings, view customer feedback, and monitor theater
+          statistics.
+        </p>
+        <div class="actions">
+          <a href="{% url 'logout' %}" class="btn">Logout</a>
         </div>
+        <div class="actions">
+          {% if theater_exists %}
+          <a href="{% url 'theater_profile_update' %}" class="btn"
+            >Update Theater</a
+          >
+          {% else %}
+          <a href="{% url 'theater_profile_create' %}" class="btn"
+            >Create Theater</a
+          >
+          {% endif %}
+        </div>
+        <div class="actions">
+          <a href="{% url 'logout' %}" class="btn">Add Offers</a>
+        </div>
+      </div>
+      <div>
+        {% if theater_exists %}
+        <h1>{{ theater.name }} Dashboard</h1>
+        <div class="side-panel">
+          <p>Location: {{ theater.location }}</p>
+          <p>Capacity: {{ theater.capacity }}</p>
+          <a href="{% url 'add_showtime' %}">Add Showtime</a>
+        </div>
+
+        <h2>Showtimes</h2>
+        {% if showtimes %}
+        <table>
+          <tr>
+            <th>Movie</th>
+            <th>Showtime</th>
+            <th>Actions</th>
+          </tr>
+          {% for showtime in showtimes %}
+          <tr>
+            <td>{{ showtime.movie.title }}</td>
+            <td>{{ showtime.showtime }}</td>
+            <td>
+              <a href="{% url 'edit_showtime' showtime.id %}">Edit</a> |
+              <a
+                href="{% url 'delete_showtime' showtime.id %}"
+                onclick="return confirm('Are you sure?');"
+                >Delete</a
+              >
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+        {% else %}
+        <p class="no-data">
+          No showtimes available.
+      
+          <a href="{% url 'add_showtime' %}">Add a showtime</a>.
+        </p>
+        {% endif %}
+
+        <hr />
+        <h2>Customer Bookings</h2>
+        {% if bookings %}
+        <table>
+          <thead>
+            <tr>
+              <th>Customer Name</th>
+              <th>Movie Name</th>
+              <th>Showtime</th>
+              <th>Quantity</th>
+              <th>Ticket_ID:</th>
+              <th>Booking Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for booking in bookings %}
+            <tr>
+              <td>{{ booking.customer.name }}</td>
+              <td>{{ booking.showtime.movie.title }}</td>
+              <td>{{ booking.showtime }}</td>
+              <td>{{ booking.quantity }}</td>
+              <td>{{ booking.number_of_tickets }}</td>
+              <td>{{ booking.booking_date }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p class="no-data">No bookings available for this theater.</p>
+        {% endif %} {% else %}
+        <p>No theater profile found. Please create one to view details.</p>
+        {% endif %}
+      </div>
     </div>
-</body>
+  </body>
 </html>
