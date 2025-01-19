@@ -84,6 +84,7 @@ class Movie(models.Model):
     genre = models.CharField(max_length=100)
     language = models.CharField(max_length=50, default="English")
     poster = models.ImageField(upload_to='movies/posters/', null=True, blank=True)
+    is_upcoming = models.BooleanField(default=False)
     
     def __str__(self):
         return self.title
@@ -123,3 +124,20 @@ class Booking(models.Model):
 
     def __str__(self):
         return f"{self.customer.username} - {self.movie.title} - {self.showtime.showtime}"
+    
+
+class CustomerProfile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='customer_profile')
+    name = models.CharField(max_length=100)  # Added name field
+    contact_number = models.CharField(max_length=15, null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+    
+class Raise(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    subject = models.CharField(max_length=100)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.subject

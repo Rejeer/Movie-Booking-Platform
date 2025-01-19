@@ -1,0 +1,89 @@
+<!-- admin_dashboard.html -->
+
+{% load static %}
+{% block content %}
+    <h2>Admin Dashboard - Ticket List</h2>
+
+    <style>
+        /* Table styling */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #1a1a1a; /* Dark background for the table */
+            color: white; /* White text for readability */
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #444; /* Border with a medium-dark color */
+        }
+
+        th {
+            background-color: #333; /* Dark background for the header */
+            font-weight: bold;
+            color: #f0f0f0; /* Lighter text color for headers */
+        }
+
+        tr:nth-child(even) {
+            background-color: #2a2a2a; /* Darker gray for even rows */
+        }
+
+        tr:hover {
+            background-color: #444; /* Slightly lighter gray when hovering over rows */
+        }
+
+        /* Styling for the page heading */
+        h2 {
+            color: black; /* White text for the heading */
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        /* Responsive table */
+        @media (max-width: 768px) {
+            table, th, td {
+                font-size: 14px;
+                padding: 8px;
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+        }
+
+        /* Styling for empty message */
+        .empty-message {
+            color: #f44336; /* Red color for empty message */
+            font-size: 16px;
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+
+    <table>
+        <tr>
+            <th>Subject</th>
+            <th>Description</th>
+            <th>User</th>
+            <th>Email</th>
+            <th>Created At</th>
+        </tr>
+        {% for ticket in tickets %}
+        <tr>
+            <td>{{ ticket.subject }}</td>
+            <td>{{ ticket.description }}</td>
+            <td>{{ ticket.user.username }}</td>
+            <td>{{ ticket.user.email }}</td>
+            <td>{{ ticket.created_at }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="empty-message">No tickets raised yet.</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

@@ -35,7 +35,11 @@
 <body>
     <h1>Thank You!</h1>
     <p class="success-message">Your payment was successful!</p>
-    <a href="/" class="button">Go to Homepage</a>
+    <!-- book_movie.html (after successful booking) -->
+
+
+
+    <a href="{% url 'customer_bookings' %}" class="button">Go to Homepage</a>
 </body>
 <script>
     function updatePrice() {

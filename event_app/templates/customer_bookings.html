@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Movie Bookings</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+        margin-top: 20px;
+      }
+
+      .ticket-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 40px;
+      }
+
+      .ticket {
+        background: #ffdb58;
+        width: 80%;
+        max-width: 800px;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .ticket::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 8px;
+        background-color: #ff6347;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      .ticket {
+        background: #ffdb58;
+        width: 80%;
+        max-width: 800px;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease-in-out; /* Add transition for smooth zoom */
+      }
+      
+      .ticket:hover {
+        transform: scale(1.35); /* Scale the ticket to 105% on hover */
+      }
+      
+
+      th,
+      td {
+        padding: 10px;
+        text-align: center;
+        border: 1px solid #ddd;
+        font-size: 14px;
+      }
+
+      th {
+        background-color: #333;
+        color: white;
+      }
+
+      td {
+        background-color: #fff;
+      }
+
+      .ticket-details {
+        display: flex;
+        justify-content: space-between;
+        font-size: 16px;
+        margin-top: 10px;
+      }
+
+      .ticket-details div {
+        font-weight: bold;
+      }
+
+      .ticket-title {
+        font-size: 20px;
+        font-weight: bold;
+        text-align: center;
+        margin-top: 10px;
+      }
+
+      .ticket-footer {
+        text-align: center;
+        font-size: 14px;
+        margin-top: 20px;
+        color: #555;
+      }
+
+      .ticket-footer p {
+        margin: 5px;
+      }
+
+      .no-bookings {
+        text-align: center;
+        font-size: 18px;
+        margin-top: 50px;
+        color: #888;
+      }
+
+      /* Back Button Styling */
+      .back-button {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color:rgb(252, 87, 58);
+        color: white;
+        text-align: center;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 16px;
+      }
+
+      .back-button:hover {
+        background-color:  #ff6347;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Your Movie Bookings</h1>
+
+    <div class="ticket-container">
+      {% if bookings %} {% for booking in bookings %}
+      <div class="ticket">
+        <div class="ticket-title">{{ booking.movie.title }}</div>
+        <div class="ticket-details">
+          <div>Showtime: {{ booking.showtime.showtime }}</div>
+          <div>Date: {{ booking.booking_date }}</div>
+        </div>
+        <div class="ticket-details">
+          <div>Seats: {{ booking.number_of_tickets }}</div>
+        </div>
+        <div class="ticket-footer">
+          <p>Thank you for booking with us!</p>
+          <p>Enjoy your movie!</p>
+        </div>
+      </div>
+      {% endfor %} {% else %}
+      <p class="no-bookings">You have not made any bookings yet.</p>
+      {% endif %}
+
+      <!-- Back to Homepage Button -->
+      <a href="{% url 'customer_dashboard' %}" class="back-button">Back to Homepage</a>
+    </div>
+  </body>
+</html>

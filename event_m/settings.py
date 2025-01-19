@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'event_app'
+    'event_app',
 ]
 
 MIDDLEWARE = [
@@ -130,6 +130,14 @@ PAYU_BASE_URL = "https://sandboxsecure.payu.in"  # For testing; use "https://sec
 
 MEDIA_ROOT = 'media'
 import os
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'rejeercheriyandi@gmail.com'  # Replace with your email
+EMAIL_HOST_PASSWORD = 'rejeer@123'  # Replace with your email password
+
 
 # Define the media directory where the images will be stored
 MEDIA_URL = '/media/'

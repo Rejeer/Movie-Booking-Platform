@@ -62,6 +62,69 @@
     transition: background-color 0.3s ease;
     margin-bottom:100px;
 }
+.recommended-movies {
+    margin: 40px auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    text-align: center;
+}
+
+.recommended-movies h2 {
+    margin-bottom: 20px;
+    color: #444;
+    font-size: 1.8rem;
+}
+
+.movie-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.movie-item {
+    width: 200px;
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.movie-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.movie-item img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.movie-item p {
+    margin: 10px 0;
+    color: #444;
+    font-weight: 600;
+    text-align: center;
+}
+
+.movie-item a {
+    text-decoration: none;
+    color: #ff6600;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.movie-item a:hover {
+    color: #e65c00;
+}
 
 </style>
 </head>
@@ -75,10 +138,29 @@
             <div class="movie-detail-info">
                 <h2>{{ movie.title }}</h2>
                 <p><strong>Description:</strong> {{ movie.description }}</p>
-                <p><strong>Rating:</strong> {{ movie.rating }}</p>
+                <p><strong>Release:</strong> {{ movie.release_date }}</p>
+                <p><strong>Language:</strong> {{ movie.language }}</p>
+                <p><strong>Genres:</strong> {{ movie.genre }}</p></br>
                 <a href="{% url 'book_movie'  movie.id  %}" class="btn">Book</a>
             </div>
         </div>
     </div>
+
+<div class="recommended-movies">
+    <h2>Recommended Movies</h2>
+    <div class="movie-list">
+        {% for recommended in recommended_movies %}
+            <div class="movie-item">
+                <a href="{% url 'movie_detail' recommended.id %}">
+                    <img src="{{ recommended.poster.url }}" alt="{{ recommended.title }}">
+                    <p>{{ recommended.title }}</p>
+                </a>
+            </div>
+        {% empty %}
+            <p>No recommendations available.</p>
+        {% endfor %}
+    </div>
+</div>
+
 </body>
 </html>

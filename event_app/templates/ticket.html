@@ -1,0 +1,14 @@
+<!-- view_ticket.html -->
+{% extends 'base_generic.html' %}
+
+{% block content %}
+  <h2>Your Booking Ticket</h2>
+  
+  <p><strong>Movie:</strong> {{ booking.movie.title }}</p>
+  <p><strong>Theater:</strong> {{ booking.theater.name }}</p>
+  <p><strong>Showtime:</strong> {{ booking.showtime.time }}</p>
+  <p><strong>Number of Tickets:</strong> {{ booking.number_of_tickets }}</p>
+  <p><strong>Customer:</strong> {{ booking.customer.username }}</p>
+  
+  <a href="{% url 'home' %}">Go back to homepage</a>
+{% endblock %}

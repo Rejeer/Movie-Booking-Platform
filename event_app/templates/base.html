@@ -162,19 +162,25 @@
   <!-- Navbar -->
   <nav class="navbar">
     <div class="navbar-left">
-      <div class="logo">Avvenimento</div>
+      <div class="logo">FilmFlex</div>
       <ul class="nav-links">
         <li><a href="{% url 'customer_dashboard' %}">Home</a></li>
         <li><a href="#">About</a></li>
-        <li><a href="#">Hotels</a></li>
-        {% comment %} <li><a href="{% url 'user_bookings' booking_id=booking.id %}">Booking</a></li> {% endcomment %}
-
-        <li><a href="#">Contact Us</a></li>
+        <li><a href="{% url 'customer_bookings'  %}">Your Ticket</a></li>
+        <li><a href="{% url 'ticket_list' %}">Support</a></li>
         <li><a href="#">FAQs</a></li>
       </ul>
     </div>
     <div class="navbar-buttons">
-      <button class="btn" onclick="location.href='#" >Create Profile</button>
+      {% if user.customer_profile %}
+      <!-- Show View Profile button if the customer profile exists -->
+      <button class="btn" onclick="location.href='{% url "customer_profile_view" %}'">View Profile</button>
+  {% else %}
+      <!-- Show Create Profile button if the customer profile doesn't exist -->
+      <button class="btn" onclick="location.href='{% url "customer_profile" %}'">Create Profile</button>
+  {% endif %}
+  
+
       {% if user.is_authenticated %}
         <button class="btn logout-btn" onclick="location.href='{% url 'logout' %}'">Logout</button>
     {% else %}
@@ -212,7 +218,7 @@
     <!-- Copyright -->
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.05);">
       © 2020 Copyright:
-      <a class="text-body" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+      <a class="text-body" href="https://mdbootstrap.com/">FilmFlex.com</a>
     </div>
     <!-- Copyright -->
   </footer>

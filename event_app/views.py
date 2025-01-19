@@ -6,7 +6,15 @@ from .forms import CustomUserCreationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import *
-import random
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Theater
+from django.contrib import messages
+
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.conf import settings
+import requests
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Movie, Theater, Showtime, Booking
@@ -15,6 +23,12 @@ from django.db.models import Sum
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from .utils import send_booking_confirmation_email 
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .models import Movie, Theater, Showtime, Booking
+from django.db.models import Sum
 
 from django.contrib import messages
 from django.shortcuts import render, redirect
@@ -85,22 +99,41 @@ def logout_view(request):
     messages.success(request, "You have successfully logged out.")
     return redirect('login') 
 
-
+from datetime import date
 @login_required
 def index(request):
     movies = Movie.objects.all()
+    malayalam_movies = Movie.objects.filter(language='Malayalam')
+    hindi_movies = Movie.objects.filter(language='Hindi')
+    telugu_movies = Movie.objects.filter(language='Telugu')
+    kannada_movies = Movie.objects.filter(language='Kannada')
+    tamil_movies = Movie.objects.filter(language='Tamil')  
+    english_movies = Movie.objects.filter(language='English')
+    upcoming_movies = Movie.objects.filter(release_date__gt=date.today()).order_by('release_date')
     bookings = Booking.objects.filter(customer=request.user)
-    return render(request, 'index.html', {'movies': movies , 'bookings': bookings})
+    return render(request, 'index.html', {'movies': movies ,'malayalam_movies': malayalam_movies,
+        'hindi_movies': hindi_movies,
+        'telugu_movies': telugu_movies,
+        'kannada_movies': kannada_movies, 
+        'tamil_movies': tamil_movies,  
+        'english_movies': english_movies,
+        'upcoming_movies': upcoming_movies,
+        'bookings': bookings})
 
 
 @login_required
 def movie_detail(request, movie_id):
     movie = get_object_or_404(Movie, id=movie_id)
-    return render(request, 'movie_detail.html', {'movie': movie})
+    recommended_movies = Movie.objects.filter(
+        genre=movie.genre
+        
+    ).exclude(id=movie_id)[:5]
+    return render(request, 'movie_detail.html', {'movie': movie,'recommended_movies': recommended_movies})
 
 @login_required
 def admin_dashboard(request):
-    movies = Movie.objects.all()
+    
+    movies = Movie.objects.all().order_by('-release_date')
     theater = Theater.objects.all()
     return render(request, 'admin_dashboard.html' ,{'movies': movies,'theater':theater})
 
@@ -117,24 +150,6 @@ def theater_detail(request, id):
     return render(request, 'theater_detail.html', {'theater': theater,'showtimes': showtimes})
 
 @login_required
-# def theater_dashboard(request):
-#     # Check if a theater profile exists for the logged-in user
-#     theater_exists = Theater.objects.filter(user=request.user).exists()
-
-#     if theater_exists:
-#         theater = Theater.objects.get(user=request.user)  # Get the theater linked to the user
-#         showtimes = Showtime.objects.filter(theater=theater)  # Fetch related showtimes
-#     else:
-#         theater = None
-#         showtimes = None
-
-#     return render(request, 'theater_dashboard.html', {
-#         'theater_exists': theater_exists,
-#         'theater': theater,
-#         'showtimes': showtimes,
-#     })
-
-
 def theater_dashboard(request):
     # Check if a theater profile exists for the logged-in user
     theater_exists = Theater.objects.filter(user=request.user).exists()
@@ -142,7 +157,7 @@ def theater_dashboard(request):
     if theater_exists:
         theater = Theater.objects.get(user=request.user)  # Get the theater linked to the user
         showtimes = Showtime.objects.filter(theater=theater)  # Fetch related showtimes
-        bookings = Booking.objects.filter(theater=theater)  # Fetch bookings for this theater
+        bookings = Booking.objects.filter(theater=theater).order_by('-booking_date') # Fetch bookings for this theater
     else:
         theater = None
         showtimes = None
@@ -155,6 +170,7 @@ def theater_dashboard(request):
         'bookings': bookings,
     })
 
+@login_required
 def movie_create(request):
     if request.method == 'POST':
         # Get form data
@@ -163,6 +179,9 @@ def movie_create(request):
         duration = request.POST.get('duration')  # Duration in minutes
         release_date = request.POST.get('release_date')
         poster = request.FILES.get('poster')  # For file upload (poster)
+        genre = request.POST.get('genre')  # Get genre from the form
+        language = request.POST.get('language')  # Get language from the form
+        is_upcoming = request.POST.get('is_upcoming') == 'on'  # Check if checkbox is selected
 
         # Create the movie object
         movie = Movie.objects.create(
@@ -170,11 +189,15 @@ def movie_create(request):
             description=description,
             duration=duration,
             release_date=release_date,
-            poster=poster
+            poster=poster,
+            genre=genre,
+            language=language,
+            is_upcoming=is_upcoming
         )
+        movie.save()
 
         # Redirect to movie list or another page after creation
-        return redirect('admin_dashboard')  # Change 'movie_list' to your desired URL name
+        return redirect('admin_dashboard')  # Change 'admin_dashboard' to your desired URL name
 
     # Render the movie creation form
     return render(request, 'movie_create.html')
@@ -186,11 +209,12 @@ def edit_movie(request, movie_id):
     if request.method == 'POST':
         movie.title = request.POST.get('title')
         movie.description = request.POST.get('description')
-        movie.duration = request.POST.get('duration')
+        movie.duration = request.POST.get('duration')  # Duration in minutes
         movie.release_date = request.POST.get('release_date')
-        
-        if 'poster' in request.FILES:
-            movie.poster = request.FILES['poster']  # Update poster if provided
+        movie.genre = request.POST.get('genre')  # Genre of the movie
+        movie.language = request.POST.get('language', 'English')  # Language (default to 'English')
+        movie.poster = request.FILES.get('poster') if request.FILES.get('poster') else movie.poster
+        movie.is_upcoming = request.POST.get('is_upcoming') == 'on'  # Update poster if provided
         
         movie.save()  # Save changes
         return redirect('admin_dashboard')  # Redirect to the movie list or another page
@@ -208,10 +232,6 @@ def delete_movie(request, movie_id):
     return render(request, 'delete_movie.html', {'movie': movie})
 
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from .models import Theater
-from django.contrib import messages
 
 @login_required
 def theater_profile_create(request):
@@ -322,16 +342,6 @@ def delete_showtime(request, showtime_id):
     return redirect('theater_dashboard')
 
 
-
-
-
-
-
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from .models import Movie, Theater, Showtime, Booking
-from django.db.models import Sum
-
 @login_required
 def book_movie(request, movie_id):
     # Get the selected movie
@@ -386,6 +396,18 @@ def book_movie(request, movie_id):
             showtime=showtime,
             number_of_tickets=number_of_tickets
         )
+        customer_email = request.user.email  # Assumes the user model has an email field
+        try:
+            send_booking_confirmation_email(
+                customer_email=customer_email,
+                movie_title=movie.title,
+                showtime=showtime.start_time,  # Adjust this based on your Showtime model fields
+                theater_name=theater.name,
+                tickets=number_of_tickets
+            )
+            messages.success(request, "Your booking was successful! A confirmation email has been sent.")
+        except Exception as e:
+            messages.warning(request, f"Booking successful, but email sending failed: {str(e)}")
         
         messages.success(request, "Your booking was successful!")
         return redirect('payment_page', booking_id=booking.id)
@@ -398,29 +420,19 @@ def book_movie(request, movie_id):
     return render(request, 'book_movie.html', context)
 
 
-
-
-
-
-
-
 @login_required
-def user_bookings(request, booking_id):
-    # Get the booking details
+def view_ticket(request, booking_id):
+    # Get the booking object for the logged-in user
     booking = get_object_or_404(Booking, id=booking_id, customer=request.user)
-    movie_price = booking.movie.price * booking.quantity
-    # Render the booking details in a separate template
-    return render(request, 'booking.html', {'booking': booking,'movie_price': movie_price})
 
-
+    context = {
+        'booking': booking
+    }
+    return render(request, 'ticket.html', context)
 
 #PAYMENT GATEWAY
-import hashlib
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.conf import settings
-import requests
 
+@login_required
 def payment_page(request, booking_id):
     """Render the payment page."""
     booking = get_object_or_404(Booking, id=booking_id)
@@ -429,7 +441,83 @@ def payment_page(request, booking_id):
     return render(request, "payment.html", {'booking': booking, 'total_price': total_price})
 
 
-
-
+@login_required
 def payment_success(request):
     return render(request, 'payment_success.html')
+
+
+
+@login_required
+def customer_profile_create(request):
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        contact_number = request.POST.get('contact_number')
+
+        # Check if a customer profile already exists
+        if CustomerProfile.objects.filter(user=request.user).exists():
+            messages.error(request, 'Customer profile already exists!')
+            return redirect('customer_dashboard')
+
+        # Create the customer profile
+        CustomerProfile.objects.create(
+            user=request.user,
+            name=name,
+            contact_number=contact_number
+        )
+        messages.success(request, 'Customer profile created successfully!')
+        return redirect('customer_dashboard')
+
+    return render(request, 'customer_profile_create.html')
+
+
+@login_required
+def customer_profile_view(request):
+    # Fetch the profile of the logged-in user
+    profile = get_object_or_404(CustomerProfile, user=request.user)
+
+    # Pass the profile data to the template
+    return render(request, 'customer_profile_view.html', {'profile': profile})
+
+def customer_bookings(request):
+    # Assuming the user is logged in
+    if request.user.is_authenticated:
+        # Get all bookings for the logged-in user
+        bookings = Booking.objects.filter(customer=request.user).order_by('-booking_date')
+        return render(request, 'customer_bookings.html', {'bookings': bookings})
+    else:
+        return redirect('login')
+    
+@login_required
+def raise_ticket(request):
+    if request.method == 'POST':
+        subject = request.POST.get('subject')
+        description = request.POST.get('description')
+
+        # Validate the input
+        if subject and description:
+            # Save the ticket
+            ticket = Raise.objects.create(
+                user=request.user,
+                subject=subject,
+                description=description
+            )
+            ticket.save()
+            return redirect('ticket_list')  # Redirect to the ticket list page
+        else:
+            error_message = "Both Subject and Description are required!"
+            return render(request, 'raise_ticket.html', {' ticket':ticket,'error': error_message})
+
+    return render(request, 'raise_ticket.html')
+
+
+# views.py
+@login_required
+def ticket_list(request):
+    tickets = Raise.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'ticket_list.html', {'tickets': tickets})
+
+
+@login_required
+def helpLine(request):
+    tickets = Raise.objects.all().order_by('-created_at')
+    return render(request,'help_line.html',{'tickets':tickets})

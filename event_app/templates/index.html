@@ -1,133 +1,652 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
+
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
 <link rel="stylesheet" href="{% static 'styles.css' %}">
 <style>
-  .hero {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 4rem 2rem;
-    background-color: white;
-    background-image: url("{% static 'images/bg-im.jpg' %}"); /* Add background image */
-    background-size: cover; /* Ensures the background image covers the entire section */
-    background-position: center; /* Centers the background image */
-    background-repeat: no-repeat; /* Prevents repeating the image */
-  }
+    /* General Styles */
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
+        color: #333;
+    }
 
-  .hero-content {
-    max-width: 50%;
-  }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
 
-  .hero-content h1 {
-    font-size: 2rem;
-    color: #333;
-    margin-bottom: 4rem;
-  }
+    /* Hero Section */
+    .hero {
+        background-image: url("{% static 'images/bg-im.jpg' %}");
+        background-size: cover;
+        background-position: center;
+        color: #fff;
+        text-align: center;
+        padding: 6rem 1rem;
+        position: relative;
+    }
 
-  .hero-content p {
-    font-size: 1rem;
-    color: #666;
-    margin-bottom: 1rem;
-  }
+    .hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1;
+    }
 
-  .features-list {
-    list-style-type: none;
-    color: #666;
-    margin-bottom: 1rem;
-  }
+    .hero h1, .hero p, .hero .btn {
+        position: relative;
+        z-index: 2;
+    }
 
-  .features-list li {
-    margin-bottom: 0.5rem;
-  }
+    .hero h1 {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        line-height: 1.2;
+    }
 
-  .read-more-btn {
-    background-color: #ff6347;
+    .hero p {
+        font-size: 1.4rem;
+        max-width: 800px;
+        margin: 0 auto 2rem;
+        line-height: 1.6;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 0.5rem 1.5rem; /* Reduced padding */
+        background-color: #e55347;
+        color: #fff;
+        text-decoration: none;
+        font-weight: 600;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 14px; /* Reduced font size */
+    }
+    
+
+    .btn:hover {
+        background-color: #c74639;
+    }
+
+    /* Movie Grid */
+    .movie-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem;
+    }
+
+    .movie-card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .movie-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .movie-card img {
+        width: 100%;
+        height: auto;
+        max-height: 250px;
+        object-fit: cover;
+        border-bottom: 2px solid #e55347;
+    }
+
+    .movie-card h3 {
+        margin: 1rem 0;
+        font-size: 1.3rem;
+        color: #333;
+    }
+
+    .upcoming {
+        border: 2px solid #e55347;
+        transition: border 0.3s ease;
+    }
+
+    .upcoming:hover {
+        border-color: #c74639;
+    }
+
+    /* Features Section */
+    .features {
+        background-color: #f7f7f7;
+        padding: 4rem 2rem;
+        text-align: center;
+    }
+
+    .features h2 {
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .features ul {
+        list-style: none;
+        padding: 0;
+        margin: 0 auto;
+        max-width: 600px;
+        text-align: left;
+    }
+
+    .features li {
+        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+        color: #555;
+        position: relative;
+        padding-left: 1.5rem;
+    }
+
+    .features li::before {
+        content: '✔';
+        color: #e55347;
+        position: absolute;
+        left: 0;
+        font-size: 1.2rem;
+        top: 0.2rem;
+    }
+
+    /* Form Styles */
+    form {
+        margin: 2rem 0;
+    }
+
+    form label {
+        font-size: 1.1rem;
+        margin-right: 0.5rem;
+        color: #555;
+    }
+
+    form select {
+        padding: 0.7rem;
+        font-size: 1.1rem;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        outline: none;
+        transition: border-color 0.3s ease;
+    }
+
+    form select:focus {
+        border-color: #e55347;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .hero {
+            padding: 4rem 1rem;
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.4rem;
+            font-size: 1rem;
+        }
+
+        .movie-card img {
+            max-height: 200px;
+        }
+
+        .features h2 {
+            font-size: 2rem;
+        }
+
+        .features ul {
+            padding: 0 1rem;
+        }
+
+    }
+    .language-section {
+        text-align: left; /* Center the heading */
+        padding: 20px; /* Add some padding to the section */
+    }
+    
+    .language-section h2 {
+        margin-bottom: 20px; /* Space between heading and movie cards */
+    }
+
+    /* Movie Cards Container */
+    .movie-cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 20px;
+    }
+
+    .movie-card {
+        width: 18%; /* Adjust width to fit 5 cards per line */
+        margin-bottom: 20px;
+        background-color: #333;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .movie-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .movie-poster {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-bottom: 1px solid #444;
+    }
+
+    .movie-info {
+        padding: 10px;
+        color: #fff;
+    }
+
+    .movie-info strong {
+        font-size: 1.1rem;
+    }
+
+    .genre {
+        font-size: 0.9rem;
+        color: #bbb;
+    }
+    .next-btn {
+        background-color: #ff5722; /* Vibrant orange color */
+        color: white; /* Text color */
+        border: none; /* Remove default border */
+        border-radius: 5px; /* Rounded corners */
+        padding: 10px 20px; /* Button padding */
+        font-size: 16px; /* Text size */
+        cursor: pointer; /* Show pointer cursor on hover */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Add subtle shadow */
+        transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions */
+    }
+    
+    .next-btn:hover {
+        background-color: #e64a19; /* Slightly darker shade on hover */
+        transform: translateY(-2px); /* Lift effect on hover */
+    }
+    
+    .next-btn:active {
+        background-color: #d84315; /* Even darker shade on click */
+        transform: translateY(1px); /* Push down effect on click */
+    }
+    
+    .next-btn:disabled {
+        background-color: #bdbdbd; /* Gray color for disabled state */
+        cursor: not-allowed; /* Not-allowed cursor */
+    }
+    .container {
+        display: flex;
+        justify-content: center;
+        margin: 20px 0;
+    }
+    
+    .sort-form {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .sort-label {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+    }
+    
+    .sort-dropdown {
+        padding: 10px 15px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        color: #333;
+        outline: none;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .sort-dropdown:hover {
+        border-color: #ff5722;
+        box-shadow: 0 0 5px rgba(124, 121, 120, 0.77);
+    }
+    
+    .sort-dropdown:focus {
+        border-color: #e64a19;
+        box-shadow: 0 0 8px rgba(230, 74, 25, 0.7);
+    }
+    
+    option {
+        padding: 10px;
+        background-color: #fff;
+        color: #333;
+    }
+    /* General Reset */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    box-sizing: border-box;
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(to right, #ff5722, #ff7043);
     color: #fff;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  .read-more-btn:hover {
-    background-color: #e55347;
-  }
-
-  .hero-image img {
-    width: 100%;
-    max-width: 600px;
-    /* Adjust width as needed */
-  }
-
-  /* Features section */
-  .features {
-    padding: 2rem;
+    padding: 50px 20px;
     text-align: center;
-  }
+}
 
-  .features h2 {
-    font-size: 1.5rem;
-    color: #333;
-  }
+.hero .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-transform: capitalize;
+}
+
+.hero-description {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+    line-height: 1.5;
+}
+
+.hero-btn {
+    display: inline-block;
+    text-decoration: none;
+    background-color: #fff;
+    color: #ff5722;
+    padding: 15px 30px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 25px;
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.hero-btn:hover {
+    background-color: #ff7043;
+    color: #fff;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-title
+}
+h2 {
+    color: black;
+    text-align: left;
+    padding:12px;
+    font-weight: bold; 
+}
+
+    
 </style>
 
+<!-- Hero Section -->
 <section class="hero">
-  <div class="hero-content">
-    <h1>Crafting Memorable Experiences with Precision and Passion</h1>
-    <p>
-      At Avvenimento, we transform your ideas into extraordinary events. From corporate gatherings to private celebrations, our dedicated team ensures every detail is handled with care, creativity, and professionalism. Let us bring your vision to life and make your moments unforgettable
-    </p>
-    <ul class="features-list">
-      <li>Ullamcorper aliquam at id ac eros mus convallis.</li>
-      <li>Ullamcorper integer sapien bibendum orci varius.</li>
-      <li>Orci auctor odio orci bibendum sit eget sapien.</li>
-    </ul>
-    <button class="read-more-btn">Read More</button>
-  </div>
-  {% comment %}
-  <div class="hero-image">
-    <img src="#" alt="Illustration" />
-  </div>
-  {% endcomment %}
+    <div class="container">
+        <h1 class="hero-title">Book Your Movie Tickets Now</h1>
+        <p class="hero-description">Experience the magic of cinema with our easy-to-use platform.</p>
+        <button class="btn hero-btn" id="explore-movies-btn">Upcoming Movies</button>
+    </div>
 </section>
 
-<!-- Features Section -->
-<section class="features">
-  <h2>Features</h2>
-  <!-- Additional content for features -->
-</section>
-<div class="best-movie-card">
-  <h2>Best Movie</h2>
-  {% if best_movie %}
-  <div class="card">
-      <img src="{{ best_movie.image.url }}" alt="{{ best_movie.title }}">
-      <div class="card-body">
-          <h3>{{ best_movie.title }}</h3>
-          <p>{{ best_movie.description }}</p>
-          <p><strong>Rating:</strong> {{ best_movie.rating }}</p>
-          <a href="#" class="btn">View Details</a>
-      </div>
-  </div>
-  {% else %}
-  <p>No best movie available.</p>
-  {% endif %}
-</div>
-<hr>
-<!-- Movies List -->
-<div class="movies-list">
-  <h2>All Movies</h2>
-  {% for movie in movies %}
-  <div class="movie-card">
-      <img src="{{ movie.poster.url }}" alt="{{ movie.title }}">
-      <div class="movie-info">
-          <h3>{{ movie.title }}</h3>
-          <p>{{ movie.description }}</p>
-          <p><strong>Rating:</strong> {{ movie.rating }}</p>
-          <a href="{% url 'movie_detail' movie.id %}" class="btn">View Details</a>
-      </div>
-  </div>
-  {% endfor %}
-</div>
+
+<div class="container">
+    <form method="get" class="sort-form">
+        <label for="order_by" class="sort-label">Sort by:</label>
+        <select name="order_by" id="order_by" class="sort-dropdown" onchange="this.form.submit()">
+            <option value="release_date" {% if request.GET.order_by == 'release_date' %}selected{% endif %}>Release Date</option>
+            <option value="title" {% if request.GET.order_by == 'title' %}selected{% endif %}>Title</option>
+            <option value="-release_date" {% if request.GET.order_by == '-release_date' %}selected{% endif %}>Newest First</option>
+        </select>
+    </form>
 </div>
 
+    <!-- Movie Sections -->
+    <div class="language-section malayalam-section" id="malayalam-section">
+        <h2>Movies in Malayalam</h2>
+        <div class="movie-cards-container" id="malayalam-movies">
+            {% for movie in malayalam_movies %}
+                <div class="movie-card" style="{% if forloop.counter > 5 %}display: none;{% endif %}">
+                    <a href="{% url 'movie_detail' movie.id %}">
+                        <img class="movie-poster" src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+                        <div class="movie-info">
+                            <strong>{{ movie.title }}</strong>
+                            <span class="genre"> {{ movie.genre }}</span>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        {% if malayalam_movies|length > 5 %}
+            <button class="next-btn" onclick="loadMore('malayalam')">See All</button>
+        {% endif %}
+    </div>
+    
     <hr>
+    <div class="language-section hindi-section" id="hindi-section">
+        <h2>Movies in Hindi</h2>
+        <div class="movie-cards-container" id="hindi-movies">
+            {% for movie in hindi_movies %}
+                <div class="movie-card" style="{% if forloop.counter > 5 %}display: none;{% endif %}">
+                    <a href="{% url 'movie_detail' movie.id %}">
+                        <img class="movie-poster" src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+                        <div class="movie-info">
+                            <strong>{{ movie.title }}</strong>
+                            <span class="genre"> {{ movie.genre }}</span>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        {% if hindi_movies|length > 5 %}
+            <button class="next-btn" onclick="loadMore('hindi')">See All</button>
+        {% endif %}
+    </div>
+    <hr>
+    <div class="language-section telugu-section" id="telugu-section">
+        <h2>Movies in Telugu</h2>
+        <div class="movie-cards-container" id="telugu-movies">
+            {% for movie in telugu_movies %}
+                <div class="movie-card" style="{% if forloop.counter > 5 %}display: none;{% endif %}">
+                    <a href="{% url 'movie_detail' movie.id %}">
+                        <img class="movie-poster" src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+                        <div class="movie-info">
+                            <strong>{{ movie.title }}</strong>
+                            <span class="genre"> {{ movie.genre }}</span>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        {% if telugu_movies|length > 5 %}
+            <button class="next-btn" onclick="loadMore('telugu')">See All</button>
+        {% endif %}
+    </div>
+    
+    <hr>
+    
+    <!-- Tamil Movies -->
+    <div class="language-section tamil-section" id="tamil-section">
+        <h2>Movies in Tamil</h2>
+        <div class="movie-cards-container" id="tamil-movies">
+            {% for movie in tamil_movies %}
+                <div class="movie-card" style="{% if forloop.counter > 5 %}display: none;{% endif %}">
+                    <a href="{% url 'movie_detail' movie.id %}">
+                        <img class="movie-poster" src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+                        <div class="movie-info">
+                            <strong>{{ movie.title }}</strong>
+                            <span class="genre"> {{ movie.genre }}</span>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        {% if tamil_movies|length > 5 %}
+            <button class="next-btn" onclick="loadMore('tamil')">See All</button>
+        {% endif %}
+    </div>
+    
+    <hr>
+    
+    <!-- English Movies -->
+    <div class="language-section english-section" id="english-section">
+        <h2>Movies in English</h2>
+        <div class="movie-cards-container" id="english-movies">
+            {% for movie in english_movies %}
+                <div class="movie-card" style="{% if forloop.counter > 5 %}display: none;{% endif %}">
+                    <a href="{% url 'movie_detail' movie.id %}">
+                        <img class="movie-poster" src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+                        <div class="movie-info">
+                            <strong>{{ movie.title }}</strong>
+                            <span class="genre"> {{ movie.genre }}</span>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        {% if english_movies|length > 5 %}
+            <button class="next-btn" onclick="loadMore('english')">See All</button>
+        {% endif %}
+    </div>
+    
+    <hr>
+    
+    <!-- Kannada Movies -->
+    <div class="language-section kannada-section" id="kannada-section">
+        <h2>Movies in Kannada</h2>
+        <div class="movie-cards-container" id="kannada-movies">
+            {% for movie in kannada_movies %}
+                <div class="movie-card" style="{% if forloop.counter > 5 %}display: none;{% endif %}">
+                    <a href="{% url 'movie_detail' movie.id %}">
+                        <img class="movie-poster" src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+                        <div class="movie-info">
+                            <strong>{{ movie.title }}</strong>
+                            <span class="genre"> {{ movie.genre }}</span>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+        {% if kannada_movies|length > 5 %}
+            <button class="next-btn" onclick="loadMore('kannada')">See All</button>
+        {% endif %}
+    </div>
+    <hr>
+    <div class="language-section upcoming-section" id="upcoming-movies">
+        <h2>Upcoming Movies</h2>
+        <div class="movie-cards-container">
+            {% for movie in upcoming_movies %}
+                <div class="movie-card upcoming">
+                    <a href="{% url 'movie_detail' movie.id %}">
+                        <img class="movie-poster" src="{{ movie.poster.url }}" alt="{{ movie.title }}">
+                        <div class="movie-info">
+                            <strong>{{ movie.title }}</strong>
+                            <span class="genre"> {{ movie.genre }}</span>
+                        </div>
+                    </a>
+                </div>
+            {% empty %}
+                <p>No upcoming movies available.</p>
+            {% endfor %}
+        </div>
+    </div>
+    
+<section class="features">
+    <div class="container">
+        <h2>Why Choose Us?</h2>
+        <ul>
+            <li>Easy and Secure Booking</li>
+            <li>Wide Selection of Movies</li>
+            <li>Latest Showtimes and Availability</li>
+            <li>Exclusive Offers and Discounts</li>
+        </ul>
+    </div>
+</section>
+<script>
+   // Initialize the starting index for each language
+const movieData = {
+    malayalam: 5,
+    hindi: 5,
+    telugu: 5,
+    tamil: 5,
+    english: 5,
+    kannada: 5,
+};
+
+// Function to load more movies
+function loadMore(language) {
+    const movieSection = document.getElementById(`${language}-movies`);
+    const allMovies = movieSection.querySelectorAll('.movie-card');
+
+    // Calculate the range for the next set of movies
+    const startIndex = movieData[language];
+    const endIndex = startIndex + 5;
+
+    // Display the next set of movies (from startIndex to endIndex)
+    for (let i = startIndex; i < endIndex; i++) {
+        if (allMovies[i]) {
+            allMovies[i].style.display = 'block';
+        }
+    }
+
+    // Update the movieData for pagination (next starting point)
+    movieData[language] = endIndex;
+
+    // Hide the "Next" button if no more movies to display
+    if (movieData[language] >= allMovies.length) {
+        document.querySelector(`#${language}-section .next-btn`).style.display = 'none';
+    }
+}
+
+// Add a listener for the "Next" button to trigger the loadMore function
+document.addEventListener('DOMContentLoaded', function () {
+    const nextButtons = document.querySelectorAll('.next-btn');
+    nextButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const language = button.getAttribute('onclick').match(/'([^']+)'/)[1];
+            loadMore(language);
+        });
+    });
+});
+
+    const exploreMoviesBtn = document.getElementById('explore-movies-btn');
+    const upcomingMoviesSection = document.getElementById('upcoming-movies');
+
+    // Add click event listener to the button
+    exploreMoviesBtn.addEventListener('click', function(event) {
+        // Prevent default action (optional, if it's a link)
+        event.preventDefault();
+
+        // Scroll to the Upcoming Movies section
+        upcomingMoviesSection.scrollIntoView({
+            behavior: 'smooth'  // Smooth scroll effect
+        });
+    });
+</script>    
 {% endblock %}

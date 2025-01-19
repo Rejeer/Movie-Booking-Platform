@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Tickets</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url("{% static 'images/img_2.png' %}");
+            background-size: 30%;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            height: 100vh; /* Set height to 100% of the viewport */
+        }
+        header {
+            background-color: rgba(76, 175, 80, 0.9); /* Semi-transparent header */
+            color: white;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+        }
+        h1 {
+            margin: 0;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            flex: 1; /* Take up the remaining space */
+            overflow-y: auto;
+        }
+        li {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 10px auto;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            max-width: 600px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .ticket-details {
+            flex: 1;
+        }
+        .ticket-image {
+            margin-left: 15px;
+        }
+        .ticket-image img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: rgba(76, 175, 80, 0.9); /* Semi-transparent footer */
+            color: white;
+            margin-top: auto; /* Push the footer to the bottom */
+        }
+        .ticket-raise-link {
+            position: fixed; /* Fix it to the bottom right corner */
+            right: 20px;
+            bottom: 20px;
+            background-color: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .ticket-raise-link:hover {
+            background-color: #0056b3;
+        }
+        /* Back button styling */
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color:  #007BFF;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Back button -->
+        <a href="{% url 'customer_dashboard' %}" class="back-button">Back</a>
+        <h1>Your Tickets</h1>
+    </header>
+    <ul>
+        {% for ticket in tickets %}
+            <li>
+                <div class="ticket-details">
+                    <strong>{{ ticket.subject }}</strong> - {{ ticket.status }}
+                    <br>
+                    Created on: {{ ticket.created_at|date:"d M Y H:i" }}
+                </div>
+                <div class="ticket-image">
+                    <img src="{% static 'images/call center.jpeg' %}" alt="Ticket Image">
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Fixed "Ticket Raise" link -->
+    <a href="{% url 'raise_ticket' %}" class="ticket-raise-link">Ticket Raise</a>
+
+    <footer>
+        <p>Powered by Your Ticketing System</p>
+    </footer>
+</body>
+</html>

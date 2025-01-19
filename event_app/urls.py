@@ -29,7 +29,6 @@ urlpatterns = [
     #MOVIE DETAIL AND BOOKING
     path('movie/<int:movie_id>/', views.movie_detail, name='movie_detail'),
     path('booking/<int:movie_id>/',views.book_movie, name='book_movie'),
-    path('booking_detail/<int:booking_id>/', views.user_bookings, name='user_bookings'),
     #PAYMENT GATEWAY
     # path('payment/success/', views.payment_success, name='payment_success'),
     path('payment-success/', views.payment_success, name='payment_success'),
@@ -39,5 +38,22 @@ urlpatterns = [
 
     #ADMIN THEATER_LISTING
     path('theater_listing/',views.theater_list,name='theater_list'),
-    path('theater/<int:id>/', views.theater_detail, name='theater_detail')
+    path('theater/<int:id>/', views.theater_detail, name='theater_detail'),
+    #TICKET
+    path('ticket/<int:booking_id>/', views.view_ticket, name='view_ticket'),
+
+
+    #CUSTOER PROFILE CREATIONS
+
+    path('customer_profile/', views. customer_profile_create, name='customer_profile'),
+    path('customer_view-profile/', views.customer_profile_view, name='customer_profile_view'),
+ 
+    #CUSTOMER TICKET BOOKINGS
+    path('customer/bookings/', views.customer_bookings, name='customer_bookings'),
+
+    #TICKET RAISING AND LISTING
+    path('raise_ticket/', views.raise_ticket, name='raise_ticket'),
+    path('ticket_list/', views.ticket_list, name='ticket_list'),
+    #HELPLINE FROM ADMINDASHBOARD
+    path('help_line/', views.helpLine, name='help_line')
 ]

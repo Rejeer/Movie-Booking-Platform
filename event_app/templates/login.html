@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <style>
-        /* Reset and Box Sizing */
+        /* General Reset */
         * {
             margin: 0;
             padding: 0;
@@ -20,110 +21,103 @@
             align-items: center;
             min-height: 100vh;
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #6a11cb, #2575fc);
-            color: #fff;
+            background-image: url('{% static "images/Login.jpg" %}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
-        /* Container Styling */
         .login-container {
-            width: 90%;
-            max-width: 400px;
-            padding: 2rem;
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px 40px;
+            border-radius: 10px;
             text-align: center;
-            color: #333;
+            color: #fff;
+            width: 400px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
         }
 
-        h2 {
+        .login-container h2 {
             font-size: 2rem;
-            margin-bottom: 1.5rem;
-            color: #4CAF50;
+            margin-bottom: 20px;
+            color: #e50914;
         }
 
-        label {
-            display: block;
-            font-size: 0.9rem;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-            color: #555;
+        .form-group {
+            margin-bottom: 15px;
             text-align: left;
         }
 
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 0.8rem;
-            margin-bottom: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
         }
 
-        input[type="text"]:focus,
-        input[type="password"]:focus {
-            border-color: #4CAF50;
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus {
+            border-color: #e50914;
             outline: none;
-            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+            box-shadow: 0 0 5px rgba(229, 9, 20, 0.5);
         }
 
-        /* Buttons */
-        button,
-        .btn {
-            width: 100%;
-            padding: 0.8rem;
-            font-size: 1rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: #fff;
-            margin-bottom: 1rem;
-        }
-
-        button:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-        }
-
-        .btn {
-            background-color: #FF6347;
-            color: #fff;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn:hover {
-            background-color: #e55347;
-            transform: translateY(-2px);
-        }
-
-        /* Error Messages */
         .error-message {
             color: #ff4d4d;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        .login-button {
+            background: #e50914;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .login-button:hover {
+            background: #b4060f;
+        }
+
+        .form-footer {
+            margin-top: 15px;
             font-size: 0.9rem;
-            margin-bottom: 1rem;
-            text-align: center;
+        }
+
+        .form-footer a {
+            color: #e50914;
+            text-decoration: none;
+            font-weight: bold;
+            margin-left: 5px;
+            transition: color 0.3s;
+        }
+
+        .form-footer a:hover {
+            color: #b4060f;
         }
 
         /* Responsive Design */
         @media (max-width: 500px) {
             .login-container {
-                padding: 1.5rem;
+                width: 90%;
+                padding: 15px 20px;
             }
 
-            h2 {
+            .login-container h2 {
                 font-size: 1.8rem;
             }
 
-            button,
-            .btn {
+            .login-button {
                 font-size: 0.9rem;
             }
         }
@@ -143,14 +137,22 @@
 
         <form method="POST" action="{% url 'login' %}">
             {% csrf_token %}
-            <label for="username">Username:</label>
-            <input type="text" name="username" id="username" placeholder="Enter your username" required>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" name="username" id="username" placeholder="Enter your username" required>
+            </div>
 
-            <label for="password">Password:</label>
-            <input type="password" name="password" id="password" placeholder="Enter your password" required>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" id="password" placeholder="Enter your password" required>
+            </div>
 
-            <button type="submit">Login</button>
-            <a href="{% url 'signup' %}" class="btn">Sign Up</a>
+            <button type="submit" class="login-button">Login</button>
+
+            <div class="form-footer">
+                <span>Don’t have an account?</span>
+                <a href="{% url 'signup' %}">Sign Up</a>
+            </div>
         </form>
     </div>
 </body>
